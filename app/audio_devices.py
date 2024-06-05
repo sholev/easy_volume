@@ -53,12 +53,11 @@ class AudioDevice:
 
             if data_flow == EDataFlow.eRender.value:
                 return "Output"
-            elif data_flow == EDataFlow.eCapture.value:
+            if data_flow == EDataFlow.eCapture.value:
                 return "Input"
-            elif data_flow == EDataFlow.eAll.value:
+            if data_flow == EDataFlow.eAll.value:
                 return "All"
-            else:
-                return "Unknown"
+            return "Unknown"
         except COMError:
             return "Unknown"
 
@@ -75,7 +74,7 @@ class AudioDevice:
 
             device_pointer = device_enumerator.GetDevice(self.audio_device.id)
             interface = device_pointer.Activate(
-                IAudioEndpointVolume._iid_,
+                getattr(IAudioEndpointVolume, '_iid_'),
                 CLSCTX_ALL,
                 None
             )
@@ -100,8 +99,8 @@ class AudioDevice:
         volume = self.try_get_volume_control()
         if volume is None:
             return None
-        else:
-            return int(0.5 + 100.0 * volume.GetMasterVolumeLevelScalar())
+
+        return int(0.5 + 100.0 * volume.GetMasterVolumeLevelScalar())
 
     def set_volume_level(self, volume_level):
         volume = self.try_get_volume_control()
@@ -114,9 +113,8 @@ class AudioDevices:
     @staticmethod
     def get_all_devices() -> list[AudioDevice]:
         devices_list = AudioUtilities.GetAllDevices()
-        for i in range(len(devices_list)):
-            devices_list[i] = AudioDevice(devices_list[i])
-        return devices_list
+
+        return [AudioDevice(d) for d in devices_list]
 
     @staticmethod
     def get_device_states_list():
@@ -125,5 +123,4 @@ class AudioDevices:
 
 if __name__ == "__main__":
     devices = AudioDevices.get_all_devices()
-    for i in range(len(devices)):
-        print(i, devices[i])
+    [print(i, device) for i, device in enumerate(devices)]

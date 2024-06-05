@@ -4,6 +4,9 @@ import winreg
 
 
 class StartupManager:
+    """
+    Manages start on login for an application by using the Windows registry.
+    """
     def __init__(self, app_name, app_file):
         self.app_name = app_name
         self.user_path = winreg.HKEY_CURRENT_USER
@@ -14,9 +17,10 @@ class StartupManager:
     def get_executable_path(self):
         if getattr(sys, 'frozen', False):  # It is compiled. AKA 'frozen'
             return sys.executable
-        else:  # Not compiled, run script with the current python environment
-            executable = sys.executable.replace('python.exe', 'pythonw.exe')
-            return f'"{executable}" {os.path.abspath(self.app_file)}"'
+
+        # Not compiled, run script with the current python environment
+        executable = sys.executable.replace('python.exe', 'pythonw.exe')
+        return f'"{executable}" {os.path.abspath(self.app_file)}"'
 
     def is_startup_enabled(self):
         key = winreg.OpenKey(

@@ -1,7 +1,7 @@
 import os
+from tkinter import PhotoImage
 from PIL import Image
 from customtkinter import set_appearance_mode, set_default_color_theme
-from tkinter import PhotoImage
 
 from tray_app import TrayApp
 from audio_devices_window import AudioDevicesWindow

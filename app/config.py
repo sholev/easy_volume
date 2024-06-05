@@ -21,21 +21,21 @@ class Config:
 
     def load(self):
         if not os.path.exists(self.filepath):
-            with open(self.filepath, 'w') as file:
+            with open(self.filepath, mode='w', encoding='utf-8') as file:
                 json.dump({}, file)
 
-        with open(self.filepath, 'r') as file:
+        with open(self.filepath, mode='r', encoding='utf-8') as file:
             self.config = json.load(file)
 
     def save(self):
-        with open(self.filepath, 'w') as file:
+        with open(self.filepath, mode='w', encoding='utf-8') as file:
             json.dump(self.config, file, indent=4)
 
     def get(self, key, default=None):
         if key in self.config:
             return self.config[key]
-        else:
-            return default
+
+        return default
 
     def set(self, key, value):
         self.config[key] = value

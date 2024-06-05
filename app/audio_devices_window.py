@@ -55,7 +55,7 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
         self.visibility_label.destroy()
         self.label.destroy()
 
-    def on_state_selected(self, event: str):
+    def on_state_selected(self, _: str):
         value = self.states_combo_box.get()
         self.scroll_frame.on_state_selected(value)
         self.focus_set()
@@ -150,8 +150,8 @@ class FlowFrame(ctk_e.CTkVisibilityGridFrame):
         self.label.grid(row=0, column=0, padx=10, pady=0, sticky='ew')
 
         self.sliders = []
-        for i in range(len(devices)):
-            slider = SliderFrame(self, device=devices[i])
+        for i, d in enumerate(devices):
+            slider = SliderFrame(self, device=d)
             slider.grid(row=i + 1, column=0, pady=1, sticky='ew')
             self.sliders.append(slider)
 
