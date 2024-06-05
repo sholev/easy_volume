@@ -31,7 +31,7 @@ jobs:
         pyinstaller easy_volume.spec
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: easy_volume
         path: dist/*
