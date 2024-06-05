@@ -10,7 +10,10 @@ jobs:
       matrix:
         python-version: ["3.12"]
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout branch
+      uses: actions/checkout@v4
+#      with:
+#        ref: release # For specific branch
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
