@@ -123,4 +123,5 @@ class AudioDevices:
 
 if __name__ == "__main__":
     devices = AudioDevices.get_all_devices()
-    [print(i, device) for i, device in enumerate(devices)]
+    for i, device in enumerate(devices):
+        print(i, device)
