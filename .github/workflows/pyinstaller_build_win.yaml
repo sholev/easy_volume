@@ -30,12 +30,8 @@ jobs:
       run: |
         pyinstaller easy_volume.spec
 
-    - name: Archive distribution directory
-      run: |
-        Compress-Archive -Path dist/* -DestinationPath dist/easy_volume.zip
-
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: easy_volume
-        path: dist/easy_volume.zip
+        path: dist/*
