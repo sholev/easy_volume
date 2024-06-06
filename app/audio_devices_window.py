@@ -236,7 +236,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.configure(fg_color=('gray78', 'gray28'))
 
         self.grid_rowconfigure((0, 1), weight=1)
-        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure((0, 2), weight=0)
         self.grid_columnconfigure(1, weight=1)
 
         self.label = ctk.CTkLabel(self, text=device.get_friendly_name())
@@ -258,12 +258,18 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
             self.slider.grid(row=1, column=1, padx=(0, 3), pady=3, sticky='ew')
             self.slider.set(self.level)
 
+            self.vol_label = ctk.CTkLabel(
+                self, width=50, fg_color=('gray68', 'gray38'), corner_radius=6)
+            self.vol_label.grid(row=1, column=2, padx=3, pady=3)
+            self.vol_label.configure(text=self.level)
+
     def on_slide(self, val):
         if self.level == int(val):
             return
 
         self.level = int(val)
         self.device.set_volume_level(self.level)
+        self.vol_label.configure(text=self.level)
         print(self.level, self.device.get_friendly_name())
 
     def on_mute(self):
