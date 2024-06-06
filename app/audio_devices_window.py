@@ -169,7 +169,7 @@ class DeviceFrame(ctk_e.CTkVisibilityGridFrame):
         self.title_label.grid(row=0, column=0, padx=10, pady=1, sticky='w')
 
         self.move_option_menu = ctk.CTkOptionMenu(
-            self, values=['Top', 'Bottom'],
+            self, width=80, values=['Top', 'Bottom'],
             command=lambda option: on_move(option, self.title)
         )
         self.move_option_menu.grid(row=0, column=1, padx=10, pady=1,
@@ -259,7 +259,10 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
             self.slider.set(self.level)
 
             self.vol_label = ctk.CTkLabel(
-                self, width=50, fg_color=('gray68', 'gray38'), corner_radius=6)
+                self, width=45, height=32,
+                fg_color=('gray68', 'gray38'),
+                corner_radius=6
+            )
             self.vol_label.grid(row=1, column=2, padx=3, pady=3)
             self.vol_label.configure(text=self.level)
 
