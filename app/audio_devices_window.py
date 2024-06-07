@@ -16,9 +16,10 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
         self.title_txt = title
         self.title(title)
 
-        self.grid_rowconfigure((0, 2), weight=0)
+        self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure((1, 2), weight=0)
 
         self.audio_devices = self.get_audio_devices_grouped()
         self.audio_devices = self.sort_audio_devices(self.audio_devices)
@@ -26,7 +27,7 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
         self.scroll_frame = None
         self.visibility_label = None
         self.states_combo_box = None
-        self.build_widgets()
+        self.build_widgets(title)
 
     @staticmethod
     def sort_audio_devices(audio_devices: dict[str, list[AudioDevice]]):
@@ -50,10 +51,9 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
         return devices_per_type
 
-    def build_widgets(self):
+    def build_widgets(self, label_text):
         self.label = ctk.CTkLabel(
-            self, text="Audio Devices", anchor="center",
-            font=('TkDefaultFont', 18))
+            self, text=label_text, anchor="center", font=('TkDefaultFont', 18))
         self.label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
         self.scroll_frame = self.create_scroll_frame(self.audio_devices)
@@ -79,7 +79,7 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
     def on_state_selected(self, _: str):
         value = self.states_combo_box.get()
-        self.scroll_frame.on_state_selected(value)
+        self.scroll_frame.refresh_state_visibility(value)
         self.focus_set()
         config.set('selected_device_state', value)
 
@@ -89,13 +89,23 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
         return frame
 
-    def reload(self):
+    def refresh(self):
+        for audio_device_frame in self.scroll_frame.audio_device_frames:
+            for flow_frame in audio_device_frame.flow_frames:
+                for slider in flow_frame.sliders:
+                    slider.refresh()
+
+    def reload(self, update_devices=True):
+        if update_devices:
+            self.audio_devices = self.get_audio_devices_grouped()
+            self.audio_devices = self.sort_audio_devices(self.audio_devices)
+
         self.after(0, self._reload)
 
     def _reload(self):
         self.withdraw()
         self.destroy_widgets()
-        self.build_widgets()
+        self.build_widgets(self.title_txt)
         self.deiconify()
 
 
@@ -127,9 +137,9 @@ class AudioDevicesFrame(ctk.CTkScrollableFrame):
                 row=start_row + i, column=0, padx=10, pady=10, sticky="nsew"
             )
 
-    def on_state_selected(self, event: str):
+    def refresh_state_visibility(self, event: str):
         for frame in self.audio_device_frames:
-            frame.on_state_selected(event)
+            frame.refresh_state_visibility(event)
 
     def sort_and_draw_frames_grid(self):
         devices_order = config.get('audio_devices_order')
@@ -151,7 +161,7 @@ class AudioDevicesFrame(ctk.CTkScrollableFrame):
             devices_order.append(title)
 
         self.sort_and_draw_frames_grid()
-        self.on_state_selected(config.get('selected_device_state'))
+        self.refresh_state_visibility(config.get('selected_device_state'))
 
 
 class DeviceFrame(ctk_e.CTkVisibilityGridFrame):
@@ -189,10 +199,10 @@ class DeviceFrame(ctk_e.CTkVisibilityGridFrame):
                        sticky="ew")
             self.flow_frames.append(frame)
 
-    def on_state_selected(self, event: str):
+    def refresh_state_visibility(self, event: str):
         self.is_visible = False
         for frame in self.flow_frames:
-            frame.on_state_selected(event)
+            frame.refresh_state_visibility(event)
             if frame.is_visible:
                 self.is_visible = True
 
@@ -217,10 +227,10 @@ class FlowFrame(ctk_e.CTkVisibilityGridFrame):
             slider.grid(row=i + 1, column=0, pady=1, sticky='ew')
             self.sliders.append(slider)
 
-    def on_state_selected(self, event: str):
+    def refresh_state_visibility(self, event: str):
         self.is_visible = False
         for slider in self.sliders:
-            slider.on_state_selected(event)
+            slider.refresh_state_visibility(event)
             if slider.is_visible:
                 self.is_visible = True
 
@@ -245,9 +255,11 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
 
         self.btn_mute = None
         self.slider = None
+        self.is_muted = None
         self.level = self.device.get_volume_level()
         if self.level is not None:
             self.level = int(self.level)
+            self.is_muted = self.device.get_mute()
             self.btn_mute = ctk.CTkButton(
                 self, text=self.get_btn_text(), width=32, height=32,
                 command=self.on_mute, font=('TkDefaultFont', 16))
@@ -273,22 +285,41 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.level = int(val)
         self.device.set_volume_level(self.level)
         self.vol_label.configure(text=self.level)
-        print(self.level, self.device.get_friendly_name())
+        print(f'level: {self.level} | ', self.device.get_friendly_name())
 
     def on_mute(self):
-        is_muted = self.device.get_mute()
-        self.device.set_mute(not is_muted)
+        is_muted = not self.device.get_mute()
+        if self.is_muted == is_muted:
+            return
+
+        self.is_muted = is_muted
+        self.device.set_mute(is_muted)
         self.btn_mute.configure(text=self.get_btn_text())
-        print(not is_muted, self.device.get_friendly_name())
+        print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
 
     def get_btn_text(self):
         return TXT_MUTE[self.device.get_mute()]
 
-    def on_state_selected(self, event: str):
+    def refresh_state_visibility(self, event: str):
         if self.device.get_state().name in event:
             self.set_visibility(True)
         else:
             self.set_visibility(False)
+
+    def refresh(self):
+        if self.slider is None:
+            return
+
+        level = self.device.get_volume_level()
+        if self.level is not None and level != self.level:
+            self.slider.set(level)
+            self.on_slide(level)
+
+        is_muted = self.device.get_mute()
+        if self.is_muted is not None and is_muted != self.is_muted:
+            self.btn_mute.configure(text=self.get_btn_text())
+            self.is_muted = is_muted
+            print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
 
 
 if __name__ == '__main__':

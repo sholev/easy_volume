@@ -14,7 +14,8 @@ APPEARANCES = ['system', 'dark', 'light']
 class TrayApp:
     def __init__(self, title, icon_image,
                  config: Config,
-                 startup_manager: StartupManager):
+                 startup_manager: StartupManager,
+                 refresh_rate=100):
         self.root = CTk()
         self.root.withdraw()
         self.windows = {}
@@ -22,12 +23,26 @@ class TrayApp:
         self.startup_manager = startup_manager
         self.icon = self.get_icon(title, icon_image)
 
+        self.is_refreshing_windows = True
+        self.refresh_rate = refresh_rate
+        self.root.after(self.refresh_rate, self.refresh_windows)
+
     def mainloop(self):
         self.root.mainloop()
 
     def add_window(self, title, window: CTkToplevel, start_minimized=False):
         self.windows[title] = ToggleVisibilityWindow(window, start_minimized)
         self.update_menu(self.icon)
+
+    def refresh_windows(self):
+        if not self.is_refreshing_windows:
+            return
+
+        for w in self.windows.values():
+            if w.is_visible:
+                w.refresh()
+
+        self.root.after(self.refresh_rate, self.refresh_windows)
 
     def get_icon(self, title, icon_image):
         icon = Icon("name", icon_image, title)

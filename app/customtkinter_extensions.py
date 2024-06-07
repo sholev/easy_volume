@@ -14,6 +14,9 @@ class CTkToplevel(ctk.CTkToplevel):
     def reload(self):
         pass
 
+    def refresh(self):
+        pass
+
 
 class ToggleVisibilityWindow:
     def __init__(self, window: CTkToplevel, minimized: bool = True):
@@ -40,6 +43,9 @@ class ToggleVisibilityWindow:
     def reload(self):
         self.window.reload()
 
+    def refresh(self):
+        self.window.refresh()
+
 
 class CTkVisibilityGridFrame(ctk.CTkFrame):
     def __init__(self, master,  **kwargs):
@@ -50,5 +56,9 @@ class CTkVisibilityGridFrame(ctk.CTkFrame):
         self.is_visible = is_visible
         if is_visible:
             self.grid()
+            self.refresh()
         else:
             self.grid_remove()
+
+    def refresh(self):
+        pass

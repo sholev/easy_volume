@@ -86,9 +86,9 @@ class AudioDevice:
         except COMError:
             return None
 
-    def get_mute(self):
+    def get_mute(self) -> bool:
         volume = self.try_get_volume_control()
-        return volume.GetMute() if volume is not None else None
+        return bool(volume.GetMute()) if volume is not None else False
 
     def set_mute(self, is_muted: bool):
         volume = self.try_get_volume_control()
