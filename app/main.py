@@ -18,12 +18,12 @@ APP_NAME = 'Easy Volume'
 ICON_PATH = os.path.join(os.path.dirname(__file__), 'resources/icon.png')
 
 
-def init_audio_devices_window(width=450, height=500):
-    window = AudioDevicesWindow(app.root)
+def init_audio_devices_window(root, width=450, height=500):
+    window = AudioDevicesWindow(root)
     window.iconphoto(False, PhotoImage(file=ICON_PATH))
     window.minsize(width, height)
-    pos_x = app.root.winfo_screenwidth() - width - POS_OFFSET_X
-    pos_y = app.root.winfo_screenheight() - height - POS_OFFSET_Y
+    pos_x = root.winfo_screenwidth() - width - POS_OFFSET_X
+    pos_y = root.winfo_screenheight() - height - POS_OFFSET_Y
     size = f'{width}x{height}'
     pos = f'+{pos_x}+{pos_y}'
     window.geometry(geometry_string=f'{size}+{pos}')
@@ -31,8 +31,8 @@ def init_audio_devices_window(width=450, height=500):
     return window
 
 
-def init_about_window(width=300, height=150):
-    about_window = AboutWindow(app.root, VERSION)
+def init_about_window(root, width=300, height=150):
+    about_window = AboutWindow(root, VERSION)
     about_window.iconphoto(False, PhotoImage(file=ICON_PATH))
     about_window.resizable(False, False)
     pos_x = about_window.winfo_screenwidth() - width - POS_OFFSET_X
@@ -53,13 +53,13 @@ if __name__ == "__main__":
 
     app.add_window(
         "Audio Devices",
-        init_audio_devices_window(),
+        init_audio_devices_window(app.root),
         config.get('start_minimized')
     )
 
     app.add_window(
         "About",
-        init_about_window(),
+        init_about_window(app.root),
         start_minimized=True
     )
 
