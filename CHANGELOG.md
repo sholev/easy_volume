@@ -5,19 +5,14 @@ All notable changes to this project will be documented in this file.
  
 A list of added, changed and/or fixed things for the upcoming release:
  
-### Added:
+### Changes:
  
-### Changed:
- 
-### Fixed:
 
-### Removed:
- 
 ## [v0.1.0] - 2024-06-10
   
 Initial release
  
-### Added:
-- Audio devices window with volume control and mute.
-- Tray icon application with menus for appearance and settings.
-- About menu with application info.
+### Changes:
+- Initial audio devices window with volume control and mute.
+- Initial tray icon application with menus for appearance and settings.
+- Initial about menu with application info.
