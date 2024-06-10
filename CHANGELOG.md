@@ -6,7 +6,14 @@ All notable changes to this project will be documented in this file.
 A list of added, changed and/or fixed things for the upcoming release:
  
 ### Changes:
+
+## [v0.1.1] - 2024-06-10
+  
+Fix release
  
+### Changes:
+- Fixed volume label not properly displaying volume level number
+
 
 ## [v0.1.0] - 2024-06-10
   
