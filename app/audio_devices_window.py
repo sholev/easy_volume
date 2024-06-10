@@ -298,7 +298,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
 
         self.level = int(val)
         self.device.set_volume_level(self.level)
-        self.vol_label.configure(image=self.level)
+        self.vol_label.configure(text=self.level)
         print(f'level: {self.level} | ', self.device.get_friendly_name())
 
     def on_mute(self):
