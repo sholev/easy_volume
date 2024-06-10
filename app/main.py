@@ -5,8 +5,11 @@ from customtkinter import set_appearance_mode, set_default_color_theme
 
 from tray_app import TrayApp
 from audio_devices_window import AudioDevicesWindow
+from about_window import AboutWindow
 from startup_manager import StartupManager
 from config import config
+from version import VERSION
+
 
 WIDTH = 450
 HEIGHT = 500
@@ -17,6 +20,34 @@ APP_NAME = 'Easy Volume'
 ICON_PATH = os.path.join(os.path.dirname(__file__), 'resources/icon.png')
 
 
+def init_audio_devices_window():
+    window = AudioDevicesWindow(app.root)
+    window.iconphoto(False, PhotoImage(file=ICON_PATH))
+    window.minsize(WIDTH, HEIGHT)
+    pos_x = app.root.winfo_screenwidth() - WIDTH - POS_OFFSET_X
+    pos_y = app.root.winfo_screenheight() - HEIGHT - POS_OFFSET_Y
+    size = f'{WIDTH}x{HEIGHT}'
+    pos = f'+{pos_x}+{pos_y}'
+    window.geometry(geometry_string=f'{size}+{pos}')
+
+    return window
+
+
+def init_about_window():
+    about_window = AboutWindow(app.root, VERSION)
+    about_window.iconphoto(False, PhotoImage(file=ICON_PATH))
+    about_window.resizable(False, False)
+    width = about_window.winfo_width()
+    height = about_window.winfo_height()
+    pos_x = about_window.winfo_screenwidth() - width - POS_OFFSET_X
+    pos_y = about_window.winfo_screenheight() - height - POS_OFFSET_Y
+    size = f'{width}x{height}'
+    pos = f'+{pos_x}+{pos_y}'
+    about_window.geometry(geometry_string=f'{size}+{pos}')
+
+    return about_window
+
+
 if __name__ == "__main__":
     set_default_color_theme(config.get('theme'))
     set_appearance_mode(config.get('appearance'))
@@ -24,15 +55,16 @@ if __name__ == "__main__":
     startup_manager = StartupManager(APP_NAME, __file__)
     app = TrayApp(APP_NAME, Image.open(ICON_PATH), config, startup_manager)
 
-    window = AudioDevicesWindow(app.root)
-    window.iconphoto(False, PhotoImage(file=ICON_PATH))
-    window.minsize(WIDTH, HEIGHT)
+    app.add_window(
+        "Audio Devices",
+        init_audio_devices_window(),
+        config.get('start_minimized')
+    )
 
-    pos_x = app.root.winfo_screenwidth() - WIDTH - POS_OFFSET_X
-    pos_y = app.root.winfo_screenheight() - HEIGHT - POS_OFFSET_Y
-    size = f'{WIDTH}x{HEIGHT}'
-    pos = f'+{pos_x}+{pos_y}'
-    window.geometry(geometry_string=f'{size}+{pos}')
+    app.add_window(
+        "About",
+        init_about_window(),
+        start_minimized=True
+    )
 
-    app.add_window("Audio Devices", window, config.get('start_minimized'))
     app.mainloop()
