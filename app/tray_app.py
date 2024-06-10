@@ -9,13 +9,13 @@ from startup_manager import StartupManager
 from config import Config
 
 APPEARANCES = ['system', 'dark', 'light']
+REFRESH_RATE = 100  # ms
 
 
 class TrayApp:
     def __init__(self, title, icon_image,
                  config: Config,
-                 startup_manager: StartupManager,
-                 refresh_rate=100):
+                 startup_manager: StartupManager):
         self.root = CTk()
         self.root.withdraw()
         self.windows = {}
@@ -24,7 +24,7 @@ class TrayApp:
         self.icon = self.get_icon(title, icon_image)
 
         self.is_refreshing_windows = True
-        self.refresh_rate = refresh_rate
+        self.refresh_rate = REFRESH_RATE
         self.root.after(self.refresh_rate, self.refresh_windows)
 
     def mainloop(self):

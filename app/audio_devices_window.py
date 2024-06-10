@@ -3,11 +3,14 @@ import customtkinter_extensions as ctk_e
 
 from audio_devices import AudioDevices, AudioDevice
 from config import config
+from utils import emoji_to_ctk_img
 
 TXT_MUTE = {
     True: "🔈",
     False: "🔊"
 }
+
+FONT = 'TkDefaultFont'
 
 
 class AudioDevicesWindow(ctk_e.CTkToplevel):
@@ -19,14 +22,15 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure((1, 2), weight=0)
+        self.grid_columnconfigure((1, 2, 3, 4), weight=0)
 
         self.audio_devices = self.get_audio_devices_grouped()
         self.audio_devices = self.sort_audio_devices(self.audio_devices)
         self.label = None
         self.scroll_frame = None
-        self.visibility_label = None
+        self.label_visibility = None
         self.states_combo_box = None
+        self.label_reload = None
         self.build_widgets(title)
 
     @staticmethod
@@ -53,29 +57,37 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
     def build_widgets(self, label_text):
         self.label = ctk.CTkLabel(
-            self, text=label_text, anchor="center", font=('TkDefaultFont', 18))
-        self.label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
+            self, text=label_text, anchor="center", font=(FONT, 18))
+        self.label.grid(row=0, column=0, sticky="w", padx=25, pady=5)
 
         self.scroll_frame = self.create_scroll_frame(self.audio_devices)
 
-        self.visibility_label = ctk.CTkLabel(self, text="Show:")
-        self.visibility_label.grid(row=0, column=1, pady=0, padx=5)
+        self.label_visibility = ctk.CTkLabel(self, text="Show:")
+        self.label_visibility.grid(row=0, column=2, pady=0, padx=5)
 
         device_states = AudioDevices.get_device_states_list()
         self.states_combo_box = ctk.CTkComboBox(
             self, values=device_states, command=self.on_state_selected)
-        self.states_combo_box.grid(row=0, column=2, pady=0, padx=5)
+        self.states_combo_box.grid(row=0, column=3, pady=0, padx=5)
         self.states_combo_box.set(device_states[0])
         self.states_combo_box.bind('<Return>', self.on_state_selected)
         if config.get('selected_device_state') is not None:
             self.states_combo_box.set(config.get('selected_device_state'))
         self.on_state_selected(self.states_combo_box.get())
 
+        self.label_reload = ctk.CTkLabel(
+            self, text='🔄', anchor="center", font=(FONT, 24))
+        self.label_reload.bind(
+            "<Button-1>", lambda _: self._reload(hide=False))
+        self.label_reload.grid(row=0, column=4, pady=0, padx=5)
+
     def destroy_widgets(self):
+        # Are contained widgets destroyed and the memory freed?
         self.scroll_frame.destroy()
         self.states_combo_box.destroy()
-        self.visibility_label.destroy()
+        self.label_visibility.destroy()
         self.label.destroy()
+        self.label_reload.destroy()
 
     def on_state_selected(self, _: str):
         value = self.states_combo_box.get()
@@ -85,7 +97,7 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
     def create_scroll_frame(self, audio_devices):
         frame = AudioDevicesFrame(self, audio_devices=audio_devices)
-        frame.grid(row=1, column=0, columnspan=3, sticky='nsew')
+        frame.grid(row=1, column=0, columnspan=5, sticky='nsew')
 
         return frame
 
@@ -102,11 +114,13 @@ class AudioDevicesWindow(ctk_e.CTkToplevel):
 
         self.after(0, self._reload)
 
-    def _reload(self):
-        self.withdraw()
+    def _reload(self, hide=True):
+        if hide:
+            self.withdraw()
         self.destroy_widgets()
         self.build_widgets(self.title_txt)
-        self.deiconify()
+        if hide:
+            self.deiconify()
 
 
 class AudioDevicesFrame(ctk.CTkScrollableFrame):
@@ -261,8 +275,8 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
             self.level = int(self.level)
             self.is_muted = self.device.get_mute()
             self.btn_mute = ctk.CTkButton(
-                self, text=self.get_btn_text(), width=32, height=32,
-                command=self.on_mute, font=('TkDefaultFont', 16))
+                self, image=self.get_btn_img(), text='', width=32, height=32,
+                command=self.on_mute, font=(FONT, 16))
             self.btn_mute.grid(row=1, column=0, padx=3, pady=3)
 
             self.slider = ctk.CTkSlider(
@@ -284,7 +298,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
 
         self.level = int(val)
         self.device.set_volume_level(self.level)
-        self.vol_label.configure(text=self.level)
+        self.vol_label.configure(image=self.level)
         print(f'level: {self.level} | ', self.device.get_friendly_name())
 
     def on_mute(self):
@@ -294,11 +308,11 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
 
         self.is_muted = is_muted
         self.device.set_mute(is_muted)
-        self.btn_mute.configure(text=self.get_btn_text())
+        self.btn_mute.configure(image=self.get_btn_img())
         print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
 
-    def get_btn_text(self):
-        return TXT_MUTE[self.device.get_mute()]
+    def get_btn_img(self):
+        return emoji_to_ctk_img(TXT_MUTE[self.device.get_mute()])
 
     def refresh_state_visibility(self, event: str):
         if self.device.get_state().name in event:
@@ -317,7 +331,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
 
         is_muted = self.device.get_mute()
         if self.is_muted is not None and is_muted != self.is_muted:
-            self.btn_mute.configure(text=self.get_btn_text())
+            self.btn_mute.configure(image=self.get_btn_img())
             self.is_muted = is_muted
             print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
 
