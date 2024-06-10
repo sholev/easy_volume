@@ -9,11 +9,10 @@ LINK = "https://github.com/sholev/easy_volume"
 
 
 class AboutWindow(ctk_e.CTkToplevel):
-    def __init__(self, parent, version, title='About', geometry='300x150'):
+    def __init__(self, parent, version, title='About'):
         super().__init__(parent)
 
         self.title(title)
-        self.geometry(geometry)
 
         self.label_name = ctk.CTkLabel(self, text=TITLE, font=(FONT, 16))
         self.label_name.pack(pady=10)

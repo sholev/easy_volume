@@ -11,8 +11,6 @@ from config import config
 from version import VERSION
 
 
-WIDTH = 450
-HEIGHT = 500
 POS_OFFSET_X = 20
 POS_OFFSET_Y = POS_OFFSET_X * 5
 
@@ -20,29 +18,27 @@ APP_NAME = 'Easy Volume'
 ICON_PATH = os.path.join(os.path.dirname(__file__), 'resources/icon.png')
 
 
-def init_audio_devices_window():
+def init_audio_devices_window(width=450, height=500):
     window = AudioDevicesWindow(app.root)
     window.iconphoto(False, PhotoImage(file=ICON_PATH))
-    window.minsize(WIDTH, HEIGHT)
-    pos_x = app.root.winfo_screenwidth() - WIDTH - POS_OFFSET_X
-    pos_y = app.root.winfo_screenheight() - HEIGHT - POS_OFFSET_Y
-    size = f'{WIDTH}x{HEIGHT}'
+    window.minsize(width, height)
+    pos_x = app.root.winfo_screenwidth() - width - POS_OFFSET_X
+    pos_y = app.root.winfo_screenheight() - height - POS_OFFSET_Y
+    size = f'{width}x{height}'
     pos = f'+{pos_x}+{pos_y}'
     window.geometry(geometry_string=f'{size}+{pos}')
 
     return window
 
 
-def init_about_window():
+def init_about_window(width=300, height=150):
     about_window = AboutWindow(app.root, VERSION)
     about_window.iconphoto(False, PhotoImage(file=ICON_PATH))
     about_window.resizable(False, False)
-    width = about_window.winfo_width()
-    height = about_window.winfo_height()
     pos_x = about_window.winfo_screenwidth() - width - POS_OFFSET_X
     pos_y = about_window.winfo_screenheight() - height - POS_OFFSET_Y
-    size = f'{width}x{height}'
     pos = f'+{pos_x}+{pos_y}'
+    size = f'{width}x{height}'
     about_window.geometry(geometry_string=f'{size}+{pos}')
 
     return about_window
