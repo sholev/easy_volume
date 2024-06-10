@@ -1,4 +1,4 @@
-name: Lint Python code with Pycodestyle
+name: Pycodestyle
 
 on:
   push:
