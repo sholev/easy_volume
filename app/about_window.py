@@ -1,6 +1,6 @@
+import webbrowser
 import customtkinter as ctk
 import customtkinter_extensions as ctk_e
-import webbrowser
 
 
 FONT = "Arial"
