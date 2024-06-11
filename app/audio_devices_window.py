@@ -300,7 +300,9 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.level = int(val)
         self.device.set_volume_level(self.level)
         self.vol_label.configure(text=self.level)
-        logger.info(f'level: {self.level} | {self.device.get_friendly_name()}')
+        logger.info(
+            'level: %s | %s', self.level, self.device.get_friendly_name()
+        )
 
     def on_mute(self):
         is_muted = not self.device.get_mute()
@@ -311,7 +313,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.device.set_mute(is_muted)
         self.btn_mute.configure(image=self.get_btn_img())
         logger.info(
-            f'is_muted: {is_muted} | {self.device.get_friendly_name()}'
+            f'is_muted: %s | %s', is_muted, self.device.get_friendly_name()
         )
 
     def get_btn_img(self):
@@ -337,7 +339,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
             self.btn_mute.configure(image=self.get_btn_img())
             self.is_muted = is_muted
             logger.info(
-                f'is_muted: {is_muted} | {self.device.get_friendly_name()}'
+                f'is_muted: %s | %s', is_muted, self.device.get_friendly_name()
             )
 
 
