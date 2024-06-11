@@ -8,6 +8,8 @@ from pycaw.pycaw import (AudioUtilities, IAudioEndpointVolume,
                          IMMDeviceEnumerator, EDataFlow, IMMEndpoint,
                          AudioDeviceState)
 
+from logger import logger
+
 
 class AudioDevice:
     def __init__(self, audio_device: pycaw.utils.AudioDevice):
@@ -124,4 +126,4 @@ class AudioDevices:
 if __name__ == "__main__":
     devices = AudioDevices.get_all_devices()
     for i, device in enumerate(devices):
-        print(i, device)
+        logger.info(i, device)

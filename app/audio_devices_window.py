@@ -4,6 +4,7 @@ import customtkinter_extensions as ctk_e
 from audio_devices import AudioDevices, AudioDevice
 from config import config
 from utils import emoji_to_ctk_img
+from logger import logger
 
 TXT_MUTE = {
     True: "🔈",
@@ -299,7 +300,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.level = int(val)
         self.device.set_volume_level(self.level)
         self.vol_label.configure(text=self.level)
-        print(f'level: {self.level} | ', self.device.get_friendly_name())
+        logger.info(f'level: {self.level} | {self.device.get_friendly_name()}')
 
     def on_mute(self):
         is_muted = not self.device.get_mute()
@@ -309,7 +310,9 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.is_muted = is_muted
         self.device.set_mute(is_muted)
         self.btn_mute.configure(image=self.get_btn_img())
-        print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
+        logger.info(
+            f'is_muted: {is_muted} | {self.device.get_friendly_name()}'
+        )
 
     def get_btn_img(self):
         return emoji_to_ctk_img(TXT_MUTE[self.device.get_mute()])
@@ -333,7 +336,9 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         if self.is_muted is not None and is_muted != self.is_muted:
             self.btn_mute.configure(image=self.get_btn_img())
             self.is_muted = is_muted
-            print(f'is_muted: {is_muted} | ', self.device.get_friendly_name())
+            logger.info(
+                f'is_muted: {is_muted} | {self.device.get_friendly_name()}'
+            )
 
 
 if __name__ == '__main__':
