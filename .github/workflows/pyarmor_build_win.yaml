@@ -30,7 +30,6 @@ jobs:
     - name: Run PyArmor
       run: |
         pyarmor generate -i app
-        Remove-Item -Path app -Recurse -Force
         Copy-Item -Path dist/app -Destination app -Recurse
         Remove-Item -Path dist -Recurse -Force
 
