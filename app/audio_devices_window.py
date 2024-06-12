@@ -193,13 +193,11 @@ class DeviceFrame(ctk_e.CTkVisibilityGridFrame):
         self.title_label = ctk.CTkLabel(self, text=title)
         self.title_label.grid(row=0, column=0, padx=10, pady=1, sticky='w')
 
-        self.move_option_menu = ctk.CTkOptionMenu(
+        self.move_option_menu = ctk_e.CustomDropdown(
             self, width=80, values=['Top', 'Bottom'],
             command=lambda option: on_move(option, self.title)
         )
-        self.move_option_menu.grid(row=0, column=1, padx=10, pady=1,
-                                   sticky='e')
-        self.move_option_menu.set('Move')
+        self.move_option_menu.grid(row=0, column=1, padx=1, pady=1, sticky='e')
 
         sliders_per_flow = {}
         for device in devices:
@@ -265,7 +263,7 @@ class SliderFrame(ctk_e.CTkVisibilityGridFrame):
         self.grid_columnconfigure(1, weight=1)
 
         self.label = ctk.CTkLabel(self, text=device.get_friendly_name())
-        self.label.grid(row=0, column=0, columnspan=2, padx=10, pady=1,
+        self.label.grid(row=0, column=0, columnspan=3, padx=10, pady=1,
                         sticky='e')
 
         self.btn_mute = None

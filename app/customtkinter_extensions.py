@@ -1,5 +1,9 @@
 import customtkinter as ctk
 
+from customtkinter.windows.widgets.core_widget_classes import DropdownMenu
+
+from utils import emoji_to_ctk_img
+
 
 # Avoid setting of the default icon
 class CTkToplevel(ctk.CTkToplevel):
@@ -62,3 +66,29 @@ class CTkVisibilityGridFrame(ctk.CTkFrame):
 
     def refresh(self):
         pass
+
+
+class CustomDropdown(ctk.CTkFrame):
+    def __init__(self, parent, values, command=None, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.values = values
+        self.command = command
+
+        self.dropdown_button = ctk.CTkButton(
+            self, text='', image=emoji_to_ctk_img("⇅"), width=20,
+            command=self.show_menu
+        )
+        self.dropdown_button.pack()
+
+        self.dropdown_menu = DropdownMenu(self, values=values, command=command)
+
+    def show_menu(self):
+        self.update_idletasks()
+        x = self.dropdown_button.winfo_rootx()
+        y = (self.dropdown_button.winfo_rooty() +
+             self.dropdown_button.winfo_height())
+        self.dropdown_menu.open(x, y)
+
+    def select_option(self, option):
+        if self.command:
+            self.command(option)
