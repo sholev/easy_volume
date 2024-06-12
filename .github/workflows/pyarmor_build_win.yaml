@@ -31,7 +31,7 @@ jobs:
       run: |
         Copy-Item -Path app -Destination original_app -Recurse
         Remove-Item -Path app -Recurse -Force
-        pyarmor gen -O original_app -i app
+        pyarmor gen -O app -i original_app
 
     - name: Build executable with PyInstaller
       run: |
