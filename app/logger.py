@@ -37,7 +37,7 @@ logging_config = {
         },
         'app_logger': {  # custom logger
             'handlers': ['console', 'file'],
-            'level': config.get('log_level', 'INFO'),
+            'level': config.get('log_level', 'ERROR'),
             'propagate': False,
         },
     }
