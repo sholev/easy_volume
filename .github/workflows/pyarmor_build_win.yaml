@@ -29,8 +29,8 @@ jobs:
 
     - name: Run PyArmor
       run: |
-        cp app original_app
-        rmdir app
+        Copy-Item -Path app -Destination original_app -Recurse
+        Remove-Item -Path app -Recurse -Force
         pyarmor gen -O app -i original_app
 
     - name: Build executable with PyInstaller
