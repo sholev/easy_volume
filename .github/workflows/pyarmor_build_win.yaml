@@ -30,7 +30,7 @@ jobs:
     - name: Run PyArmor
       run: |
         cp app original_app
-        rmdir /S /Q app
+        rmdir app
         pyarmor gen -O app -i original_app
 
     - name: Build executable with PyInstaller
