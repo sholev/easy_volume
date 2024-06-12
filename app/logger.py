@@ -2,6 +2,8 @@ import logging.config
 
 from config import config
 
+PATH = os.path.join(os.path.dirname(__file__), 'app.log')
+
 logging_config = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -25,7 +27,7 @@ logging_config = {
             'class': 'logging.FileHandler',
             'formatter': 'detailed',
             'level': 'INFO',
-            'filename': 'app.log',
+            'filename': PATH,
             'mode': 'a',
         },
     },
