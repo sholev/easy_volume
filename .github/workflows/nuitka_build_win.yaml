@@ -33,6 +33,7 @@ jobs:
     - name: Restructure folder
       run: |
         Remove-Item -Path easy_volume/main.build -Recurse -Force
+        New-Item -Path easy_volume/easy_volume -ItemType Directory
         Move-Item -Path easy_volume/main.dist -Destination easy_volume/easy_volume/app -Force
 
     - name: Upload artifact
