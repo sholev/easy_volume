@@ -33,12 +33,11 @@ jobs:
     - name: Restructure folder
       run: |
         Remove-Item -Path easy_volume/main.build -Recurse -Force
-        Copy-Item -Path easy_volume/main.dist -Destination easy_volume/app -Recurse
-        Remove-Item -Path easy_volume/main.dist -Recurse -Force
-        New-Item -ItemType SymbolicLink -Path easy_volume/easy_volume.exe -Target ../app/easy_volume.exe
+        Move-Item -Path easy_volume/main.dist -Destination easy_volume/app -Force
+        New-Item -ItemType SymbolicLink -Path easy_volume/easy_volume.exe -Target app/easy_volume.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: easy_volume
-        path: .
+        path: easy_volume/**
