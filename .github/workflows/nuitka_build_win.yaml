@@ -29,16 +29,16 @@ jobs:
     - name: Build standalone with Nuitka
       run: |
         echo "Yes" | python -m nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=disable --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py
-    
+
     - name: Restructure folder
       run: |
-        Remove-Item -Path dist/easy_volume/main.build -Recurse -Force
-        Copy-Item -Path dist/easy_volume/main.dist -Destination dist/app
-        Remove-Item -Path dist/easy_volume/main.dist
-        New-Item -ItemType SymbolicLink -Path dist/easy_volume/easy_volume.exe -Target ../easy_volume/easy_volume.exe
+        Remove-Item -Path easy_volume/main.build -Recurse -Force
+        Copy-Item -Path easy_volume/main.dist -Destination easy_volume/app
+        Remove-Item -Path easy_volume/main.dist -Recurse -Force
+        New-Item -ItemType SymbolicLink -Path easy_volume/easy_volume.exe -Target ../easy_volume/easy_volume.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: easy_volume
-        path: dist/easy_volume/*
+        path: easy_volume/*
