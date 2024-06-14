@@ -26,10 +26,9 @@ jobs:
         pip install -r requirements.txt
         pip install nuitka
 
-    - name: Run Nuitka with Automated Answer
-      uses: powershell/script@v5
-      with:
-        args: nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico="app\resources\icon.ico" --windows-console-mode=disable --include-data-dir="app\resources=resources" --output-dir="easy_volume" --output-filename="easy_volume.exe" "app\main.py" 2>&1 && Write-Host "Yes"
+    - name: Build standalone with Nuitka
+      run: |
+        nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=disable --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py --yes
 
     - name: Restructure folder
       run: |
