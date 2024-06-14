@@ -35,7 +35,7 @@ jobs:
         Remove-Item -Path easy_volume/main.build -Recurse -Force
         Copy-Item -Path easy_volume/main.dist -Destination easy_volume/app
         Remove-Item -Path easy_volume/main.dist -Recurse -Force
-        New-Item -ItemType SymbolicLink -Path easy_volume/app/easy_volume.exe -Target ../app/easy_volume.exe
+        New-Item -ItemType SymbolicLink -Path easy_volume/easy_volume.exe -Target ../app/easy_volume.exe
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
