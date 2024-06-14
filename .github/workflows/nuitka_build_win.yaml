@@ -35,6 +35,11 @@ jobs:
         Remove-Item -Path easy_volume/main.build -Recurse -Force
         New-Item -Path easy_volume/easy_volume -ItemType Directory
         Move-Item -Path easy_volume/main.dist -Destination easy_volume/easy_volume/app -Force
+        $WScriptShell = New-Object -ComObject WScript.Shell
+        $Shortcut = $WScriptShell.CreateShortcut("easy_volume/easy_volume.lnk")
+        $Shortcut.TargetPath = "$(Resolve-Path easy_volume/app/easy_volume.exe)"
+        $Shortcut.WorkingDirectory = "$(Resolve-Path easy_volume/app)"
+        $Shortcut.Save()
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
