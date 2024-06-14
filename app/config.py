@@ -1,7 +1,7 @@
 import json
 import os
 
-PATH = os.path.join(os.path.dirname(__file__), 'config.json')
+from utils import get_path
 
 
 def init_config():
@@ -48,5 +48,5 @@ class Config:
         self.save()
 
 
-config = Config(PATH)
+config = Config(get_path('config.json'))
 init_config()

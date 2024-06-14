@@ -2,8 +2,12 @@ import os
 import logging.config
 
 from config import config
+from utils import get_path
 
-PATH = os.path.join(os.path.dirname(__file__), 'app.log')
+
+# Check if the script is compiled with Nuitka
+is_compiled = '__compiled__' in globals()
+handlers = ['file'] if is_compiled else ['console', 'file']
 
 logging_config = {
     'version': 1,
@@ -28,18 +32,18 @@ logging_config = {
             'class': 'logging.FileHandler',
             'formatter': 'detailed',
             'level': 'INFO',
-            'filename': PATH,
+            'filename': get_path('app.log'),
             'mode': 'a',
         },
     },
     'loggers': {
         '': {  # root logger
-            'handlers': ['console', 'file'],
+            'handlers': handlers,
             'level': 'DEBUG',
             'propagate': True,
         },
         'app_logger': {  # custom logger
-            'handlers': ['console', 'file'],
+            'handlers': handlers,
             'level': config.get('log_level', 'ERROR'),
             'propagate': False,
         },

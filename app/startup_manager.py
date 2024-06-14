@@ -12,8 +12,11 @@ class StartupManager:
         self.executable_path = self.get_executable_path()
 
     def get_executable_path(self):
-        if getattr(sys, 'frozen', False):  # It is compiled. AKA 'frozen'
+        if getattr(sys, 'frozen', False):  # PyInstaller 'frozen'
             return sys.executable
+
+        if '__compiled__' in globals():  # Nuitka
+            return os.path.abspath(sys.argv[0])
 
         # Not compiled, run script with the current python environment
         executable = sys.executable.replace('python.exe', 'pythonw.exe')

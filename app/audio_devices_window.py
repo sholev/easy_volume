@@ -166,14 +166,13 @@ class AudioDevicesFrame(ctk.CTkScrollableFrame):
         self.draw_frames_grid()
 
     def on_move_frame(self, option: str, title: str):
+        devices_order = config.get('audio_devices_order')
+        devices_order.remove(title)
         if option == 'Top':
-            devices_order = config.get('audio_devices_order')
-            devices_order.remove(title)
             devices_order.insert(0, title)
         elif option == 'Bottom':
-            devices_order = config.get('audio_devices_order')
-            devices_order.remove(title)
             devices_order.append(title)
+        config.set('audio_devices_order', devices_order)
 
         self.sort_and_draw_frames_grid()
         self.refresh_state_visibility(config.get('selected_device_state'))

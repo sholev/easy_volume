@@ -1,4 +1,3 @@
-import os
 from tkinter import PhotoImage
 from PIL import Image
 from customtkinter import set_appearance_mode, set_default_color_theme
@@ -9,13 +8,14 @@ from about_window import AboutWindow
 from startup_manager import StartupManager
 from config import config
 from version import VERSION
+from utils import get_path
 
 
 POS_OFFSET_X = 20
 POS_OFFSET_Y = POS_OFFSET_X * 5
 
 APP_NAME = 'Easy Volume'
-ICON_PATH = os.path.join(os.path.dirname(__file__), 'resources/icon.png')
+ICON_PATH = get_path('resources/icon.png')
 
 
 def init_audio_devices_window(root, width=450, height=500):

@@ -1,3 +1,5 @@
+import os
+import sys
 from PIL import Image, ImageDraw, ImageFont
 from customtkinter import CTkImage
 
@@ -10,3 +12,15 @@ def emoji_to_ctk_img(text, size=24, font="seguiemj.ttf"):
         (size/2, size/2), text, embedded_color=True, font=font, anchor="mm")
 
     return CTkImage(img, size=(size, size))
+
+
+def get_path(file):
+    if '__compiled__' in globals():
+        try:
+            base_path = sys._MEIPASS
+        except AttributeError:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, file)
+
+    return os.path.join(os.path.dirname(__file__), file)
