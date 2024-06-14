@@ -35,10 +35,7 @@ jobs:
         Remove-Item -Path easy_volume/main.build -Recurse -Force
         New-Item -Path easy_volume/easy_volume -ItemType Directory
         Move-Item -Path easy_volume/main.dist -Destination easy_volume/easy_volume/app -Force
-        echo @echo off > /easy_volume/easy_volume/launcher.bat
-        echo cd %~dp0 >> /easy_volume/easy_volume/launcher.bat
-        echo cd app >> /easy_volume/easy_volume/launcher.bat
-        echo start "" "easy_volume.exe" >> /easy_volume/easy_volume/launcher.bat
+        Move-Item -Path launcher.bat -Destination easy_volume/easy_volume/launcher.bat -Force
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
