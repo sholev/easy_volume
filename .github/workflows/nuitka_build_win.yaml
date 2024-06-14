@@ -26,9 +26,10 @@ jobs:
         pip install -r requirements.txt
         pip install nuitka
 
-    - name: Build executable with PyInstaller
+    - name: Build standalone with Nuitka
       run: |
         nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=disable --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py
+        y
 
     - name: Restructure folder
       run: |
