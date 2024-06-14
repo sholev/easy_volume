@@ -35,9 +35,6 @@ jobs:
         Remove-Item -Path easy_volume/main.build -Recurse -Force
         New-Item -Path easy_volume/easy_volume -ItemType Directory
         Move-Item -Path easy_volume/main.dist -Destination easy_volume/easy_volume/app -Force
-
-    - name: Create launcher.bat
-      run: |
         echo @echo off > /easy_volume/easy_volume/launcher.bat
         echo cd %~dp0 >> /easy_volume/easy_volume/launcher.bat
         echo cd app >> /easy_volume/easy_volume/launcher.bat
