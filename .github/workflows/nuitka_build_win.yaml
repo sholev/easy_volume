@@ -1,0 +1,44 @@
+name: Pyinstaller Build Win
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v4
+#      with:
+#        ref: release # For specific branch
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install nuitka
+
+    - name: Build executable with PyInstaller
+      run: |
+        nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=disable --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py
+
+    - name: Restructure folder
+      run: |
+        Remove-Item -Path dist/easy_volume/main.build -Recurse -Force
+        Copy-Item -Path dist/easy_volume/main.dist -Destination dist/app
+        Remove-Item -Path dist/easy_volume/main.dist
+        New-Item -ItemType SymbolicLink -Path dist/easy_volume/easy_volume.exe -Target ../easy_volume/easy_volume.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: easy_volume
+        path: dist/easy_volume/*
