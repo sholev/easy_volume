@@ -33,13 +33,10 @@ jobs:
     - name: Restructure folder
       run: |
         Remove-Item -Path easy_volume/main.build -Recurse -Force
-        Move-Item -Path easy_volume/main.dist -Destination easy_volume/app -Force
-        cmd /c mklink easy_volume\\easy_volume.exe app\\easy_volume.exe
-        powershell Compress-Archive -Path easy_volume/* -DestinationPath easy_volume.zip
-
+        Move-Item -Path easy_volume/main.dist -Destination easy_volume/easy_volume/app -Force
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: easy_volume
-        path: easy_volume.zip
+        path: easy_volume/**
