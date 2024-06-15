@@ -17,7 +17,7 @@ def emoji_to_ctk_img(text, size=24, font="seguiemj.ttf"):
 def get_path(file):
     if '__compiled__' in globals():
         try:
-            base_path = sys._MEIPASS
+            base_path = getattr(sys, '_MEIPASS'),
         except AttributeError:
             base_path = os.path.abspath(".")
 
