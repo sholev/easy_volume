@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
  
 
-## [v0.3.0] - 2024-06-14
+## [v0.3.0] - 2024-06-15
   
 ### Changes:
 - Fixed device order not saving in the config
