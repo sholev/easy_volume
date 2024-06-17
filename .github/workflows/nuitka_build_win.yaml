@@ -28,7 +28,7 @@ jobs:
 
     - name: Build standalone with Nuitka
       run: |
-        echo "Yes" | python -m nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=disable --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py
+        echo "Yes" | python -m nuitka --standalone --enable-plugin=tk-inter --windows-icon-from-ico=app/resources/icon.ico --windows-console-mode=attach --include-data-dir=app/resources=resources --output-dir=easy_volume --output-filename=easy_volume.exe app/main.py
 
     - name: Restructure folder
       run: |
