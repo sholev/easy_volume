@@ -15,12 +15,11 @@ def emoji_to_ctk_img(text, size=24, font="seguiemj.ttf"):
 
 
 def get_path(file):
-    if '__compiled__' in globals():
-        try:
-            base_path = getattr(sys, '_MEIPASS')
-        except AttributeError:
-            base_path = os.path.abspath(".")
+    if getattr(sys, 'frozen', False):
+        base_path = getattr(sys, '_MEIPASS')
+    elif 'Nuitka' in sys.modules:
+        base_path = os.path.dirname(sys.executable)
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
 
-        return os.path.join(base_path, file)
-
-    return os.path.join(os.path.dirname(__file__), file)
+    return os.path.join(base_path, file)
