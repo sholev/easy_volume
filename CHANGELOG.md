@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
- 
+
+ ## [v0.3.1] - 2024-06-17
+  
+### Changes:
+- Fix for start on login not working as intended
 
 ## [v0.3.0] - 2024-06-15
   
